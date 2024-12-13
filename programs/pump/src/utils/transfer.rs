@@ -1,12 +1,12 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Token};
-use solana_program::program::{invoke, invoke_signed};
+use anchor_spl::token;
+use solana_program::{program::{invoke, invoke_signed}, system_instruction::transfer};
 
 //  transfer sol from user
 pub fn sol_transfer_from_user<'info>(
     signer: &Signer<'info>,
-    destination: AccountInfo<'info>,
-    system_program: &Program<'info, System>,
+    destination: &AccountInfo<'info>,
+    system_program: &AccountInfo<'info>,
     amount: u64,
 ) -> Result<()> {
     let ix = transfer(signer.key, destination.key, amount);
@@ -14,7 +14,7 @@ pub fn sol_transfer_from_user<'info>(
         &ix,
         &[
             signer.to_account_info(),
-            destination,
+            destination.to_account_info(),
             system_program.to_account_info(),
         ],
     )?;
@@ -24,16 +24,20 @@ pub fn sol_transfer_from_user<'info>(
 
 // transfer sol from PDA
 pub fn sol_transfer_with_signer<'info>(
-    source: AccountInfo<'info>,
-    destination: AccountInfo<'info>,
-    system_program: &Program<'info, System>,
+    source: &AccountInfo<'info>,
+    destination: &AccountInfo<'info>,
+    system_program: &AccountInfo<'info>,
     signers_seeds: &[&[&[u8]]],
     amount: u64,
 ) -> Result<()> {
     let ix = transfer(source.key, destination.key, amount);
     invoke_signed(
         &ix,
-        &[source, destination, system_program.to_account_info()],
+        &[
+            source.to_account_info(), 
+            destination.to_account_info(), 
+            system_program.to_account_info()
+            ],
         signers_seeds,
     )?;
 
@@ -42,18 +46,18 @@ pub fn sol_transfer_with_signer<'info>(
 
 //  transfer token from user
 pub fn token_transfer_user<'info>(
-    from: AccountInfo<'info>,
-    authority: &Signer<'info>,
-    to: AccountInfo<'info>,
-    token_program: &Program<'info, Token>,
+    from: &AccountInfo<'info>,
+    authority: &AccountInfo<'info>,
+    to: &AccountInfo<'info>,
+    token_program: &AccountInfo<'info>,
     amount: u64,
 ) -> Result<()> {
     let cpi_ctx: CpiContext<_> = CpiContext::new(
         token_program.to_account_info(),
         token::Transfer {
-            from,
+            from: from.to_account_info(),
             authority: authority.to_account_info(),
-            to,
+            to: to.to_account_info(),
         },
     );
     token::transfer(cpi_ctx, amount)?;
@@ -63,19 +67,19 @@ pub fn token_transfer_user<'info>(
 
 //  transfer token from PDA
 pub fn token_transfer_with_signer<'info>(
-    from: AccountInfo<'info>,
-    authority: AccountInfo<'info>,
-    to: AccountInfo<'info>,
-    token_program: &Program<'info, Token>,
+    from: &AccountInfo<'info>,
+    authority: &AccountInfo<'info>,
+    to: &AccountInfo<'info>,
+    token_program: &AccountInfo<'info>,
     signer_seeds: &[&[&[u8]]],
     amount: u64,
 ) -> Result<()> {
     let cpi_ctx: CpiContext<_> = CpiContext::new_with_signer(
         token_program.to_account_info(),
         token::Transfer {
-            from,
-            to,
-            authority,
+            from: from.to_account_info(),
+            authority: authority.to_account_info(),
+            to: to.to_account_info(),
         },
         signer_seeds,
     );
