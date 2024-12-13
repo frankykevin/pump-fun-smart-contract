@@ -1,31 +1,16 @@
-use crate::consts::INITIAL_PRICE;
-use crate::errors::CustomError;
+use crate::errors::PumpError;
 use crate::utils::convert_from_float;
 use crate::utils::convert_to_float;
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
+use core::fmt::Debug;
 use std::cmp;
 use std::ops::Add;
 use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
 
-#[account]
-pub struct CurveConfiguration {
-    pub fees: f64,
-}
-
-impl CurveConfiguration {
-    pub const SEED: &'static str = "CurveConfiguration";
-
-    // Discriminator (8) + f64 (8)
-    pub const ACCOUNT_SIZE: usize = 8 + 32 + 8;
-
-    pub fn new(fees: f64) -> Self {
-        Self { fees }
-    }
-}
 
 #[account]
 pub struct LiquidityProvider {
@@ -396,12 +381,7 @@ impl<'info> LiquidityPoolAccount<'info> for Account<'info, LiquidityPool> {
             return err!(CustomError::InvalidAmount);
         }
         msg!("Mint: {:?} ", token_one_accounts.0.key());
-        msg!(
-            "Swap: {:?} {:?} {:?}",
-            authority.key(),
-            style,
-            amount
-        );
+        msg!("Swap: {:?} {:?} {:?}", authority.key(), style, amount);
 
         // xy = k => Constant product formula
         // (x + dx)(y - dy) = k
@@ -443,7 +423,7 @@ impl<'info> LiquidityPoolAccount<'info> for Account<'info, LiquidityPool> {
                 .ok_or(CustomError::OverflowOrUnderflowOccurred)?;
 
             self.update_reserves(new_reserves_one, new_reserves_two)?;
-            msg!{"Reserves: {:?} {:?}", new_reserves_one, new_reserves_two}
+            msg! {"Reserves: {:?} {:?}", new_reserves_one, new_reserves_two}
             self.transfer_token_to_pool(
                 token_one_accounts.2,
                 token_one_accounts.1,
@@ -451,7 +431,7 @@ impl<'info> LiquidityPoolAccount<'info> for Account<'info, LiquidityPool> {
                 authority,
                 token_program,
             )?;
-           
+
             self.transfer_sol_from_pool(
                 token_two_accounts.2,
                 token_two_accounts.1,
@@ -481,10 +461,10 @@ impl<'info> LiquidityPoolAccount<'info> for Account<'info, LiquidityPool> {
                 .reserve_two
                 .checked_add(amount)
                 .ok_or(CustomError::OverflowOrUnderflowOccurred)?;
-            
+
             self.update_reserves(new_reserves_one, new_reserves_two)?;
-            
-            msg!{"Reserves: {:?} {:?}", new_reserves_one, new_reserves_two}
+
+            msg! {"Reserves: {:?} {:?}", new_reserves_one, new_reserves_two}
             self.transfer_token_from_pool(
                 token_one_accounts.1,
                 token_one_accounts.2,
