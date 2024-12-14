@@ -22,4 +22,5 @@ pub struct Config {
 
 impl Config {
     pub const SEED_PREFIX: &'static str = "global-config";
+    pub const LEN: usize = 32 + 32 + 8 + 8 * 4 + 8 * 3;
 }
