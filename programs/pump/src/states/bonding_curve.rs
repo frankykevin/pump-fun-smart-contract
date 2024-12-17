@@ -49,21 +49,22 @@ impl<'info> BondingCurve {
         curve_limit: u64,                  //  bonding curve limit
         user: &Signer<'info>,              //  user address
 
-        curve_pda: &AccountInfo<'info>,     //  bonding curve PDA
-        fee_recipient: &AccountInfo<'info>, //  team wallet address to get fee
+        curve_pda: &mut AccountInfo<'info>,     //  bonding curve PDA
+        fee_recipient: &mut AccountInfo<'info>, //  team wallet address to get fee
 
-        user_ata: &AccountInfo<'info>, //  associated toke accounts for user
-        curve_ata: &AccountInfo<'info>, //  associated toke accounts for curve
+        user_ata: &mut AccountInfo<'info>, //  associated toke accounts for user
+        curve_ata: &mut AccountInfo<'info>, //  associated toke accounts for curve
 
         amount_in: u64,      //  sol amount to pay
         min_amount_out: u64, //  minimum amount out
         fee_percent: f64,    //  buy fee
 
-        curve_bump: &u8, // bump for signer
+        curve_bump: u8, // bump for signer
 
         system_program: &AccountInfo<'info>, //  system program
         token_program: &AccountInfo<'info>,  //  token program
     ) -> Result<bool> {
+        
         let (amount_out, fee_lamports) =
             self.calc_amount_out(amount_in, token_mint.decimals, 0, fee_percent)?;
 
@@ -83,7 +84,7 @@ impl<'info> BondingCurve {
             curve_pda,
             user_ata,
             token_program,
-            &[&BondingCurve::get_signer(&token_mint.key(), curve_bump)],
+            &[&BondingCurve::get_signer(&token_mint.key(), &curve_bump)],
             amount_out,
         )?;
 
@@ -129,7 +130,7 @@ impl<'info> BondingCurve {
         min_amount_out: u64, //  minimum amount out
         fee_percent: f64,    //  sell fee
 
-        curve_bump: &u8, // bump for signer
+        curve_bump: u8, // bump for signer
         
         system_program: &AccountInfo<'info>, //  system program
         token_program: &AccountInfo<'info>,  //  token program
@@ -144,7 +145,7 @@ impl<'info> BondingCurve {
         );
 
         let token = token_mint.key();
-        let signer_seeds: &[&[&[u8]]] = &[&BondingCurve::get_signer(&token, curve_bump)];
+        let signer_seeds: &[&[&[u8]]] = &[&BondingCurve::get_signer(&token, &curve_bump)];
         //  transfer fee to team wallet
         sol_transfer_with_signer(
             &user,
