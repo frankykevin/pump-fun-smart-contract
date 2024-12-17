@@ -1,20 +1,22 @@
-## Basic smart contract for pump.fun
+## Solana smart contract for pump.fun
 
-You can check frontend and backend repo as well.
+> You can check frontend and backend repo as well.
+> 
+> https://github.com/m8s-lab/pump-fun-frontend
+> 
+> https://github.com/m8s-lab/pump-fun-backend
 
 You can contact me if you want a better product.
 
-New features on an updated version
-- All handled in smart contracts
-Pumpfun uses backend client code to fetch buy transaction and create raydium pool.
-I've handled all that parts on smart contract to enhance the security and availability.
+Available features
+- All handled in smart contracts: 
+Token creation and Raydium deposits are handled in the smart contract.
 
-- Added some launch phases
-There's some phases to launch a token like `Presale`.
-If the users want to snipe a token, they can bid for the token in `Presale` phase before `Launch`.
+- Add some launch phases: 
+Add `Presale` phase before the launch to allow snipers.
 
-- Raydium/Meteora
-Token launchers can migrate their tokens to Raydium or Migrate as their wish after the curve is completed.
+- Raydium/Meteora migration: 
+Token launchers can migrate their tokens to Raydium or Meteora as they wish after the curve is completed.
 
 Telegram: https://t.me/microgift28
 
