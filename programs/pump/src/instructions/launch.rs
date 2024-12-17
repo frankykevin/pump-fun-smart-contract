@@ -2,13 +2,12 @@ use crate::{
     consts::TOKEN_DECIMAL,
     states::{BondingCurve, Config},
 };
-use anchor_lang::{prelude::*, system_program};
+use anchor_lang::{prelude::*, solana_program::sysvar::SysvarId, system_program};
 use anchor_spl::{
     associated_token::{self, AssociatedToken},
     metadata::{self, mpl_token_metadata::types::DataV2, Metadata},
     token::{self, spl_token::instruction::AuthorityType, Mint, Token, TokenAccount},
 };
-use solana_program::sysvar::SysvarId;
 
 #[derive(Accounts)]
 pub struct Launch<'info> {

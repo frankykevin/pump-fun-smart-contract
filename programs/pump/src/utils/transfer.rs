@@ -1,6 +1,11 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{
+    prelude::*,
+    solana_program::{
+        program::{invoke, invoke_signed},
+        system_instruction::transfer,
+    },
+};
 use anchor_spl::token;
-use solana_program::{program::{invoke, invoke_signed}, system_instruction::transfer};
 
 //  transfer sol from user
 pub fn sol_transfer_from_user<'info>(
@@ -34,10 +39,10 @@ pub fn sol_transfer_with_signer<'info>(
     invoke_signed(
         &ix,
         &[
-            source.to_account_info(), 
-            destination.to_account_info(), 
-            system_program.to_account_info()
-            ],
+            source.to_account_info(),
+            destination.to_account_info(),
+            system_program.to_account_info(),
+        ],
         signers_seeds,
     )?;
 
