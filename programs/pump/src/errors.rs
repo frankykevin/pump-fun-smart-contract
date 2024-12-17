@@ -2,8 +2,11 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum PumpError {
-    #[msg("The value is not in the expected range")]
+    #[msg("Not authorized address")]
     NotAuthorized,
+
+    #[msg("Fee recipient address is not match with the one in the config")]
+    IncorrectFeeRecipient,
 
     #[msg("The value is not in the expected range")]
     IncorrectValue,
@@ -13,4 +16,7 @@ pub enum PumpError {
 
     #[msg("An overflow or underflow occurred during the calculation")]
     OverflowOrUnderflowOccurred,
+
+    #[msg("Curve is already completed")]
+    CurveAlreadyCompleted,
 }
