@@ -23,6 +23,7 @@ pub struct BondingCurve {
 
 impl<'info> BondingCurve {
     pub const SEED_PREFIX: &'static str = "bonding-curve";
+    pub const LEN: usize = 8 * 5 + 1;
 
     //  get signer for bonding curve PDA
     pub fn get_signer<'a>(mint: &'a Pubkey, bump: &'a u8) -> [&'a [u8]; 3] {
