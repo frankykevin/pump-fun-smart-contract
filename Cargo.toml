@@ -2,6 +2,7 @@
 members = [
     "programs/*"
 ]
+resolver = "1"
 
 [profile.release]
 overflow-checks = true
