@@ -1,11 +1,5 @@
 ## Solana smart contract for pump.fun
 
-> You can check frontend and backend repo as well.
-> 
-> https://github.com/m8s-lab/pump-fun-frontend
-> 
-> https://github.com/m8s-lab/pump-fun-backend
-
 You can contact me if you want a better product.
 
 Available features
