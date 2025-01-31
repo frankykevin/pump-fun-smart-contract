@@ -18,9 +18,8 @@ Add `Presale` phase before the launch to allow snipers.
 - Raydium/Meteora migration: 
 Token launchers can migrate their tokens to Raydium or Meteora as they wish after the curve is completed.
 
-Telegram: https://t.me/microgift88
+Telegram: https://t.me/frankykevin
 
-Discord: https://discord.com/users/1074514238325927956
 
 ## Test addresses and transactions
 - Contract
